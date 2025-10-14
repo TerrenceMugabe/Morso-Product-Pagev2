@@ -255,14 +255,17 @@
         }
         
         /* Breadcrumbs */
-        .breadcrumbs {
+        breadcrumbs {
             padding: 1rem 0;
             font-size: 0.875rem;
             color: var(--text-light);
             background: var(--white);
             margin-bottom: 0.5rem;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
             text-align: left;
+            display: flex;
+            justify-content: center;
+            margin-left: 10%;
         }
         
         .breadcrumbs__item {
@@ -875,4 +878,5 @@
 
 
         }
+
 

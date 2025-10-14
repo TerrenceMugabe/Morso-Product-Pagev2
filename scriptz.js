@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.disabled = true;
         const productName = document.querySelector('.product-page-title').textContent;
         const productPrice = document.querySelector('.product-page-price').textContent.replace('R', '').trim();
-        const totalPrice = `R${(parseFloat(productPrice) * quantity).toLocaleString()}.`;
+        const totalPrice = `R${(parseFloat(productPrice) * quantity).toLocaleString()}.00`;
 
         setTimeout(() => {
             this.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
@@ -117,4 +117,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
 

@@ -961,7 +961,7 @@
 
 .view-cart-btn:hover {
     border-color: var(--primary-color);
-    color: var(--primary-color);
+    color: white;
 }
 
 .checkout-btn {
@@ -1014,6 +1014,7 @@
 
 
         }
+
 
 
 

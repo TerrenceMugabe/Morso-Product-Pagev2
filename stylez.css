@@ -285,6 +285,7 @@
             padding: 2rem 0;
             margin-bottom: 2rem;
             text-align: center;
+            margin-left: 8%;
             
         }
         
@@ -871,5 +872,6 @@
             * {
                 transition: none !important;
             }
+
 
         }

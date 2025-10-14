@@ -874,10 +874,10 @@
 
 .close-btn {
     cursor: pointer;
-    font-size: 20px;
+    font-size: 30px;
     border: none;
     background: none;
-    color: var(--text-light);
+    color: #000;
     padding: 0;
     line-height: 1;
 }
@@ -1014,6 +1014,7 @@
 
 
         }
+
 
 
 

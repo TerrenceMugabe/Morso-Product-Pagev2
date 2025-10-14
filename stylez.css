@@ -945,7 +945,7 @@
     border: 1px solid var(--border-color);
     background-color: #000;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     font-family: 'Rubik', sans-serif;
     transition: all 0.3s ease;
@@ -956,7 +956,7 @@
 }
 
 .view-cart-btn {
-    color: var(--text-dark);
+    color: #fff;
 }
 
 .view-cart-btn:hover {
@@ -1014,6 +1014,7 @@
 
 
         }
+
 
 
 

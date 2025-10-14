@@ -943,7 +943,7 @@
 .cart-actions button {
     padding: 10px 20px;
     border: 1px solid var(--border-color);
-    background-color: var(--white);
+    background-color: #000;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
@@ -1014,6 +1014,7 @@
 
 
         }
+
 
 
 

@@ -42,16 +42,39 @@ document.addEventListener('DOMContentLoaded', function() {
     incrementBtn.addEventListener('click', () => updateQuantity(1));
 
     const addToCartBtn = document.getElementById('addToCartBtn');
+    const cartPopup = document.querySelector('.cart-popup');
+    const closeBtn = document.querySelector('.close-btn');
+    const cartItemName = document.getElementById('cart-item-name');
+    const cartItemVariant = document.getElementById('cart-item-variant');
+    const cartItemPrice = document.getElementById('cart-item-price');
+    const cartSubtotal = document.getElementById('cart-subtotal');
+
     addToCartBtn.addEventListener('click', function() {
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         this.disabled = true;
+        const productName = document.querySelector('.product-page-title').textContent;
+        const productPrice = document.querySelector('.product-page-price').textContent.replace('R', '').trim();
+        const totalPrice = `R${(parseFloat(productPrice) * quantity).toLocaleString()}.00`;
+
         setTimeout(() => {
             this.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
             setTimeout(() => {
                 this.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
                 this.disabled = false;
             }, 2000);
+
+            // Update popup content
+            cartItemName.textContent = productName;
+            cartItemVariant.textContent = 'With Installation';
+            cartItemPrice.textContent = `${quantity} x ${totalPrice}`;
+            cartSubtotal.textContent = totalPrice;
+
+            cartPopup.classList.add('active'); // Show the popup
         }, 1000);
+    });
+
+    closeBtn.addEventListener('click', function() {
+        cartPopup.classList.remove('active'); // Hide the popup
     });
 
     mainImage.addEventListener('click', function() {
@@ -80,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            console.log('Tab clicked:', btn.textContent); // Debug: Check if click fires
             const targetTab = btn.dataset.tab;
 
             tabBtns.forEach(b => b.classList.remove('active'));
@@ -90,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 panel.classList.remove('active');
                 if (panel.id === targetTab) {
                     panel.classList.add('active');
-                    console.log('Switched to panel:', targetTab); // Debug: Check if switching
                 }
             });
         });

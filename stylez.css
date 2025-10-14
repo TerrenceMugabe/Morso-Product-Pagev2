@@ -542,6 +542,7 @@
             border: 1px solid #1e1919;
             font-weight: bolder;
             font-family: 'Rubik', sans-serif;
+            font-size: 14px;
         }
         
         .button--secondary:hover {
@@ -1014,6 +1015,7 @@
 
 
         }
+
 
 
 

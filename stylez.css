@@ -930,6 +930,7 @@
     border-top: 1px solid var(--border-color);
     padding-top: 10px;
     font-weight: 700;
+    margin-top: auto; /* Pushes subtotal to the bottom */
 }
 
 .cart-actions {
@@ -1013,6 +1014,7 @@
 
 
         }
+
 
 
 

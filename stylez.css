@@ -264,7 +264,7 @@
             margin-top: 0.5rem;
             text-align: left;
             display: flex;
-            justify-content: center;
+            margin-left: 10%;
          
         }
         
@@ -878,6 +878,7 @@
 
 
         }
+
 
 
 

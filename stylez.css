@@ -265,7 +265,7 @@
             text-align: left;
             display: flex;
             justify-content: center;
-            margin-left: 10%;
+         
         }
         
         .breadcrumbs__item {
@@ -878,5 +878,6 @@
 
 
         }
+
 
 

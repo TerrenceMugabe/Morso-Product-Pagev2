@@ -555,7 +555,8 @@
             display: flex;
             gap: 0.5rem;
             margin: 1rem 0;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            justify-content: space-between;
         }
         
         .trust-badge {
@@ -1015,6 +1016,7 @@
 
 
         }
+
 
 
 

@@ -998,7 +998,11 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
             }
-            
+
+.backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
         
         @media (max-width: 480px) {
             .container {
@@ -1030,6 +1034,7 @@
 
 
         }
+
 
 
 

@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartItemPrice = document.getElementById('cart-item-price');
     const cartSubtotal = document.getElementById('cart-subtotal');
     let quantity = 0; // Initialize to 0 (cart empty)
-    let isFirstAddToCart = true; // Track first click
     const maxQty = Infinity;
     const basePrice = 3290.00;
 
@@ -56,12 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function addToCartHandler() {
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         this.disabled = true;
-        if (isFirstAddToCart) {
-            quantity = 1; // Set to 1 on first click
-            isFirstAddToCart = false;
-        } else {
-            quantity += 1; // Increment on subsequent clicks
-        }
+        quantity += 1; // Increment quantity per click
         updateQuantity(0); // Update displays without changing quantity
         const productName = document.querySelector('.product-page-title').textContent;
         const productPrice = document.querySelector('.product-page-price')
@@ -109,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     closeBtn.addEventListener('click', function() {
         quantity = 0; // Clear cart
-        isFirstAddToCart = true; // Reset first click
         updateQuantity(0); // Reset displays, qtyDisplay to 1, price to R3,290.00
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
@@ -121,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     backdrop.addEventListener('click', function() {
         quantity = 0; // Clear cart
-        isFirstAddToCart = true; // Reset first click
         updateQuantity(0); // Reset displays, qtyDisplay to 1, price to R3,290.00
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';

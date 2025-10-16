@@ -118,4 +118,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+const qtyDisplay = document.querySelector('.qty-display');
+const qtyIncrement = document.querySelector('.js-qty-increment');
+const qtyDecrement = document.querySelector('.js-qty-decrement');
+const cartItemPrice = document.querySelector('#cart-item-price');
+const cartSubtotal = document.querySelector('#cart-subtotal');
+const basePrice = 3290.00; // Base price in Rands
+
+qtyIncrement.addEventListener('click', () => {
+  let qty = parseInt(qtyDisplay.textContent);
+  qty++;
+  qtyDisplay.textContent = qty;
+  cartItemPrice.textContent = `${qty} x R${(basePrice * qty).toFixed(2)}`;
+  cartSubtotal.textContent = `R${(basePrice * qty).toFixed(2)}`;
+});
+
+qtyDecrement.addEventListener('click', () => {
+  let qty = parseInt(qtyDisplay.textContent);
+  if (qty > 1) {
+    qty--;
+    qtyDisplay.textContent = qty;
+    cartItemPrice.textContent = `${qty} x R${(basePrice * qty).toFixed(2)}`;
+    cartSubtotal.textContent = `R${(basePrice * qty).toFixed(2)}`;
+  }
+});
+
+
 

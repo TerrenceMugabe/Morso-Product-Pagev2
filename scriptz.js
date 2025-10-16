@@ -1,10 +1,12 @@
+// Toggles mobile navigation menu.
 function toggleMenu() {
     const nav = document.getElementById('navMobile');
     if (nav) nav.classList.toggle('active');
 }
 
+// Runs on page load to set up event listeners and initial states.
 document.addEventListener('DOMContentLoaded', function() {
-    // Debug: Check DOM elements
+    // Check for required DOM elements.
     const qtyDisplay = document.getElementById('qty');
     const decrementBtn = document.querySelector('.js-qty-decrement');
     const incrementBtn = document.querySelector('.js-qty-increment');
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.querySelector('.close-btn');
     const removeBtn = document.querySelector('.remove-btn');
 
+    // Log missing elements for debugging.
     if (!qtyDisplay || !decrementBtn || !incrementBtn || !addToCartBtn || !cartPopup || !closeBtn || !removeBtn) {
         console.error('Missing DOM elements:', {
             qtyDisplay, decrementBtn, incrementBtn, addToCartBtn, cartPopup, closeBtn, removeBtn
@@ -25,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Gallery thumbnails
+    // Gallery thumbnails: Update main image on click.
     const thumbnails = document.querySelectorAll('.gallerythumb');
     const mainImage = document.querySelector('.mainpic');
     
@@ -43,46 +46,66 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Quantity selector
-    let quantity = 1; // Initialize to 1 to match displayed #qty
+    // Quantity and cart setup.
+    let quantity = 1; // Current quantity in #qty input.
+    let cart = { items: [], totalQuantity: 0, totalPrice: 0 }; // Persistent cart state.
     const maxQty = Infinity;
-    const basePrice = 3290.00;
+    const basePrice = 3290.00; // Price per item in ZAR.
 
-    // Format price for South African Rand
+    // Format price in South African Rand (e.g., R3,290.00).
     const formatPrice = (price) => {
         return `R${price.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
 
-    // Update quantity and prices
+    // Update quantity and price display.
     function updateQuantity(change) {
-        console.log('updateQuantity called with change:', change, 'Current quantity:', quantity);
-        quantity = Math.max(0, Math.min(maxQty, quantity + change)); // Allow 0
-        qtyDisplay.textContent = quantity === 0 ? 1 : quantity; // Display 1 if quantity is 0
-        decrementBtn.disabled = quantity === 0;
+        console.log('updateQuantity:', change, 'Quantity:', quantity);
+        quantity = Math.max(1, Math.min(maxQty, quantity + change)); // Keep between 1 and maxQty.
+        qtyDisplay.textContent = quantity;
+        decrementBtn.disabled = quantity === 1;
         incrementBtn.disabled = quantity === maxQty;
         const priceDisplay = document.querySelector('.qty-selector span:last-child');
         if (priceDisplay) {
-            priceDisplay.textContent = `× ${formatPrice(basePrice * (quantity === 0 ? 1 : quantity))}`; // Show R3,290.00 when quantity is 0
+            priceDisplay.textContent = `× ${formatPrice(basePrice * quantity)}`;
         }
         qtyDisplay.style.transform = 'scale(1.05)';
         setTimeout(() => qtyDisplay.style.transform = 'scale(1)', 150);
-        console.log('Updated: Quantity=', quantity, 'Display=', qtyDisplay.textContent, 'Price=', priceDisplay.textContent);
+        console.log('Updated: Quantity=', quantity, 'Price=', priceDisplay.textContent);
     }
 
-    // Initialize price display
-    updateQuantity(0); // Set initial price to R3,290.00, qtyDisplay to 1
+    // Initialize quantity and price.
+    updateQuantity(0); // Set #qty to 1, price to R3,290.00.
 
-    // Cart handler
+    // Handle Add to Cart.
     function addToCartHandler() {
-        console.log('Add to Cart clicked, Quantity before:', quantity);
+        console.log('Add to Cart, Quantity:', quantity);
         addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         addToCartBtn.disabled = true;
-        updateQuantity(1); // Increment quantity
+
+        // Get product details.
         const productName = document.querySelector('.product-page-title')?.textContent || 'Product';
         const productPriceText = document.querySelector('.product-page-price')?.textContent || 'R3,290';
-        const productPrice = parseFloat(productPriceText.replace('R', '').replace(',', '')) || 3290.00; // Handle R3,290
-        const total = productPrice * quantity;
+        const productPrice = parseFloat(productPriceText.replace('R', '').replace(',', '')) || 3290.00;
 
+        // Add selected quantity to cart.
+        const existingItem = cart.items.find(item => item.name === productName);
+        if (existingItem) {
+            existingItem.quantity += quantity;
+            existingItem.totalPrice = existingItem.quantity * productPrice;
+        } else {
+            cart.items.push({
+                name: productName,
+                price: productPrice,
+                quantity: quantity,
+                totalPrice: quantity * productPrice
+            });
+        }
+
+        // Update cart totals.
+        cart.totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+        cart.totalPrice = cart.items.reduce((sum, item) => sum + item.totalPrice, 0);
+
+        // Update popup after delay.
         setTimeout(() => {
             addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
             setTimeout(() => {
@@ -90,54 +113,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 addToCartBtn.disabled = false;
             }, 2000);
 
-            // Update popup content
+            // Update popup content.
             cartItemName.textContent = productName;
             cartItemVariant.textContent = 'With Installation';
-            cartItemPrice.textContent = quantity > 0 
-                ? `${quantity} x ${formatPrice(productPrice)}` 
-                : 'YOUR cart is empty';
-            cartSubtotal.textContent = quantity > 0 
-                ? formatPrice(total) 
+            cartItemPrice.textContent = cart.totalQuantity > 0 
+                ? `${cart.totalQuantity} x ${formatPrice(productPrice)}` 
+                : 'Your cart is empty';
+            cartSubtotal.textContent = cart.totalQuantity > 0 
+                ? formatPrice(cart.totalPrice) 
                 : formatPrice(0);
 
             cartPopup.classList.add('active');
-            backdrop.classList.add('active'); // Show grey backdrop
-            cartPopup.focus(); // Accessibility
-            console.log('Popup updated: Quantity=', quantity, 'CartItemPrice=', cartItemPrice.textContent);
+            backdrop.classList.add('active');
+            cartPopup.focus();
+            console.log('Popup: Total Quantity=', cart.totalQuantity, 'Price=', cartItemPrice.textContent);
         }, 1000);
     }
 
-    // Prevent duplicate listeners
+    // Prevent duplicate listeners.
     addToCartBtn.removeEventListener('click', addToCartHandler);
     addToCartBtn.addEventListener('click', addToCartHandler);
 
+    // Quantity button listeners.
     decrementBtn.addEventListener('click', () => {
-        console.log('Decrement clicked, Quantity before:', quantity);
+        console.log('Decrement, Quantity:', quantity);
         updateQuantity(-1);
     });
     incrementBtn.addEventListener('click', () => {
-        console.log('Increment clicked, Quantity before:', quantity);
+        console.log('Increment, Quantity:', quantity);
         updateQuantity(1);
     });
 
+    // Clear cart and reset.
     function clearCart() {
-        console.log('Clearing cart, Quantity before:', quantity);
-        quantity = 0; // Clear cart
-        updateQuantity(0); // Reset displays
+        console.log('Clearing cart, Total Quantity:', cart.totalQuantity);
+        cart = { items: [], totalQuantity: 0, totalPrice: 0 };
+        quantity = 1;
+        updateQuantity(0);
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
-        cartItemPrice.textContent = 'YOUR cart is empty'; // Updated message
+        cartItemPrice.textContent = 'Your cart is empty';
         cartSubtotal.textContent = formatPrice(0);
         cartPopup.classList.remove('active');
-        backdrop.classList.remove('active'); // Hide backdrop
-        console.log('Cart cleared: Quantity=', quantity, 'CartItemPrice=', cartItemPrice.textContent);
+        backdrop.classList.remove('active');
+        console.log('Cart cleared: Total Quantity=', cart.totalQuantity);
     }
 
+    // Attach clearCart to buttons.
     closeBtn.addEventListener('click', clearCart);
     backdrop.addEventListener('click', clearCart);
-    removeBtn.addEventListener('click', clearCart); // Handle remove-btn
+    removeBtn.addEventListener('click', clearCart);
 
-    // Image modal
+    // Image modal: Show enlarged image on click (desktop only).
     mainImage.addEventListener('click', function() {
         if (window.innerWidth < 768) return;
         const modal = document.createElement('div');
@@ -148,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(() => modal.style.opacity = '1');
     });
 
-    // Reviews link scroll
+    // Reviews link: Smooth scroll to reviews.
     const reviewsLink = document.querySelector('.reviews-link');
     if (reviewsLink) {
         reviewsLink.addEventListener('click', e => {
@@ -159,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Tab functionality
+    // Tabs: Switch between tab panels.
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabPanels = document.querySelectorAll('.tab-panel');
 

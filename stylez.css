@@ -629,17 +629,17 @@
             color: #000;
             cursor: pointer;
             transition: all 0.3s ease;
-            border-right: 1px solid #f7ad0044;
+            border-right: 1px solid #8c6942;
         }
         
         .tab-btn:hover{
             color: #000;
-            background: #dfa811;
+            background: #8c6942;
         }
 
         .tab-btn.active{
            color: #000;
-            background: #f7ad00; 
+            background: #8c6942; 
             box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
         }
         
@@ -1044,6 +1044,7 @@
 
 
         }
+
 
 
 

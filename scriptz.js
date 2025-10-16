@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize quantity and price.
-    updateQuantity(0); // Set #qty to 1, price to R3,290.00.
+    updateQuantity(1); // Set #qty to 1, price to R3,290.00.
 
     // Handle Add to Cart.
     function addToCartHandler() {
@@ -204,3 +204,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+

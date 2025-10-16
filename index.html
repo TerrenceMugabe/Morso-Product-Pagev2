@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="stylez.css">
     <link rel="icon" type="image/png" href="https://www.morsoe.co.za/wp-content/uploads/2023/02/favicon.png">
+
 </head>
 <body>
     <!-- Desktop Header -->
@@ -124,9 +125,9 @@
                             R3,290<sup></sup>
                         </p>
                         <p style="font-family: 'Rubik', sans-serif;">
-                            <span style="text-decoration: line-through;">Was R3,990.00</span> – 
-                            <span style="font-weight: bold; color: white; background-color: #059669; padding: 4px 8px; border-radius: 0px; text-decoration: none;">Save 18%</span>
-                        </p>
+  <span style="text-decoration: line-through;">Was R3,990.00</span> – 
+  <span style="font-weight: bold; color: white; background-color: #059669; padding: 4px 8px; border-radius: 0px; text-decoration: none;">Save 18%</span>
+</p>
                     </div>
                     
                     <div class="product-code">
@@ -143,12 +144,11 @@
                                         <a href="/help/delivery">Can dispatch immediately.</a>
                                     </div>
                                     <div class="feedback-description-1">
-                                        <a href="/help/delivery">View Delivery Information</a>
+                                        <a href="/help/delivery">View Delivery Infromation</a>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Replaced Quantity Selector -->
                             <div class="qty-selector">
                                 <label for="qty">Quantity:</label>
                                 <button type="button" class="qty-button js-qty-decrement" aria-label="Decrease quantity">−</button>
@@ -158,8 +158,10 @@
                             </div>
                         </div>
 
-                        <!-- Replaced Add to Cart Button -->
-                        <button id="addToCartBtn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        <button class="button button--primary" id="addToCartBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart
+                        </button>
 
                         <div class="trust-badges">
                             <div class="trust-badge">
@@ -187,29 +189,31 @@
                             Add to Wish List
                         </button>
                     </div>
+
+                    <!--<button class="button button--secondary">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Locate Showroom
+                    </button>-->
                 </div>
             </div>
         </section>
-
-        <!-- Replaced Cart Popup -->
-        <div class="cart-popup">
-            <h2>Shopping Cart <button class="close-btn">&times;</button></h2>
-            <div class="item">
-                <img src="https://www.morsoe.co.za/wp-content/uploads/2023/02/forno_1-500x500.png" alt="Selected Product" class="cart-item-image">
-                <div class="item-details">
-                    <div id="cart-item-name"></div>
-                    <div id="cart-item-variant"></div>
-                    <div id="cart-item-price">Cart is empty</div>
-                    <span class="remove-btn">Remove</span>
-                </div>
-            </div>
-            <div class="subtotal">Subtotal <span id="cart-subtotal">R0.00</span></div>
-            <div class="cart-actions">
-                <button class="view-cart-btn">View Cart</button>
-                <button class="checkout-btn">Check Out</button>
-            </div>
+<!-- Cart Popup -->
+<div class="cart-popup">
+    <h2>Shopping Cart <button class="close-btn">×</button></h2>
+    <div class="item">
+        <img src="https://www.morsoe.co.za/wp-content/uploads/2023/02/forno_1-500x500.png" alt="Selected Product" class="cart-item-image">
+        <div class="item-details">
+            <p id="cart-item-name">MORSØ Forno Oven <span id="cart-item-variant">With Installation</span></p>
+            <p class="price" id="cart-item-price">1 x R3,290.00</p>
+            <span class="remove-btn">Remove</span>
         </div>
-
+    </div>
+    <div class="subtotal">Subtotal <span id="cart-subtotal">R3,290.00</span></div>
+    <div class="cart-actions">
+        <button class="view-cart-btn">View Cart</button>
+        <button class="checkout-btn">Check Out</button>
+    </div>
+</div>
         <div class="product-content">
             <div class="tabs-container">
                 <ul class="tab-nav">
@@ -278,7 +282,7 @@
             <h2 class="related-title">You May Also Like</h2>
             <div class="related-grid">
                 <div class="related-item">
-                    <img src="https://www.morsoe.co.za/wp-content/uploads/2023/04/website-kasserolle_frit_saucepan_insolus.jpg" alt="Premium Fireplace" class="related-img">
+                    <img src="https://www.morsoe.co.za/wp-content/uploads/2023/04/website-kasserolle_frit_saucepan_insolus.jpg"  alt="Premium Fireplace" class="related-img">
                     <div class="related-info">
                         <div class="related-name">Sauté Pan With Lid 25cm</div>
                         <div class="related-price">R5,050</div>
@@ -299,7 +303,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section>z
     </div>
     <div class="backdrop"></div>
     <footer>
@@ -310,4 +314,14 @@
 
     <script src="scriptz.js"></script>
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+

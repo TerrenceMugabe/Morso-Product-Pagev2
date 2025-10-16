@@ -1,9 +1,29 @@
 function toggleMenu() {
     const nav = document.getElementById('navMobile');
-    nav.classList.toggle('active');
+    if (nav) nav.classList.toggle('active');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Debug: Check if DOM elements exist
+    const qtyDisplay = document.getElementById('qty');
+    const decrementBtn = document.querySelector('.js-qty-decrement');
+    const incrementBtn = document.querySelector('.js-qty-increment');
+    const cartItemPrice = document.getElementById('cart-item-price');
+    const cartSubtotal = document.getElementById('cart-subtotal');
+    const cartItemName = document.getElementById('cart-item-name');
+    const cartItemVariant = document.getElementById('cart-item-variant');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const cartPopup = document.querySelector('.cart-popup');
+    const backdrop = document.querySelector('.backdrop');
+    const closeBtn = document.querySelector('.close-btn');
+
+    if (!qtyDisplay || !decrementBtn || !incrementBtn || !addToCartBtn || !cartPopup || !closeBtn) {
+        console.error('Missing DOM elements:', {
+            qtyDisplay, decrementBtn, incrementBtn, addToCartBtn, cartPopup, closeBtn
+        });
+        return;
+    }
+
     // Gallery thumbnails
     const thumbnails = document.querySelectorAll('.gallerythumb');
     const mainImage = document.querySelector('.mainpic');
@@ -23,13 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Quantity selector
-    const qtyDisplay = document.getElementById('qty');
-    const decrementBtn = document.querySelector('.js-qty-decrement');
-    const incrementBtn = document.querySelector('.js-qty-increment');
-    const cartItemPrice = document.getElementById('cart-item-price');
-    const cartSubtotal = document.getElementById('cart-subtotal');
-    const cartItemName = document.getElementById('cart-item-name');
-    const cartItemVariant = document.getElementById('cart-item-variant');
     let quantity = 0; // Initialize to 0 (cart empty)
     const maxQty = Infinity;
     const basePrice = 3290.00;
@@ -41,30 +54,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update quantity and prices
     function updateQuantity(change) {
+        console.log('updateQuantity called with change:', change, 'Current quantity:', quantity);
         quantity = Math.max(0, Math.min(maxQty, quantity + change)); // Allow 0
         qtyDisplay.textContent = quantity === 0 ? 1 : quantity; // Display 1 if quantity is 0
         decrementBtn.disabled = quantity === 0;
         incrementBtn.disabled = quantity === maxQty;
-        document.querySelector('.qty-selector span:last-child').textContent = `× ${formatPrice(basePrice * (quantity === 0 ? 1 : quantity))}`; // Show R3,290.00 when quantity is 0
+        const priceDisplay = document.querySelector('.qty-selector span:last-child');
+        if (priceDisplay) {
+            priceDisplay.textContent = `× ${formatPrice(basePrice * (quantity === 0 ? 1 : quantity))}`; // Show R3,290.00 when quantity is 0
+        }
         qtyDisplay.style.transform = 'scale(1.05)';
         setTimeout(() => qtyDisplay.style.transform = 'scale(1)', 150);
+        console.log('Updated: Quantity=', quantity, 'Display=', qtyDisplay.textContent, 'Price=', priceDisplay.textContent);
     }
 
     // Initialize price display
     updateQuantity(0); // Set initial price to R3,290.00, qtyDisplay to 1
 
-    // Cart popup and backdrop
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const cartPopup = document.querySelector('.cart-popup');
-    const backdrop = document.querySelector('.backdrop');
-    const closeBtn = document.querySelector('.close-btn');
-
-    // Remove existing listeners to prevent duplicates
+    // Cart handler
     function addToCartHandler() {
+        console.log('Add to Cart clicked, Quantity before:', quantity);
         addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         addToCartBtn.disabled = true;
         updateQuantity(1); // Increment quantity
-        const productName = document.querySelector('.product-page-title').textContent;
+        const productName = document.querySelector('.product-page-title')?.textContent || 'Product';
         const productPrice = document.querySelector('.product-page-price')
             ? parseFloat(document.querySelector('.product-page-price').textContent.replace('R', '').replace(',', ''))
             : 3290.00; // Fallback price
@@ -90,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cartPopup.classList.add('active');
             backdrop.classList.add('active'); // Show grey backdrop
             cartPopup.focus(); // Accessibility
+            console.log('Popup updated: Quantity=', quantity, 'CartItemPrice=', cartItemPrice.textContent);
         }, 1000);
     }
 
@@ -97,18 +111,26 @@ document.addEventListener('DOMContentLoaded', function() {
     addToCartBtn.removeEventListener('click', addToCartHandler);
     addToCartBtn.addEventListener('click', addToCartHandler);
 
-    decrementBtn.addEventListener('click', () => updateQuantity(-1));
-    incrementBtn.addEventListener('click', () => updateQuantity(1));
+    decrementBtn.addEventListener('click', () => {
+        console.log('Decrement clicked, Quantity before:', quantity);
+        updateQuantity(-1);
+    });
+    incrementBtn.addEventListener('click', () => {
+        console.log('Increment clicked, Quantity before:', quantity);
+        updateQuantity(1);
+    });
 
     function clearCart() {
+        console.log('Clearing cart, Quantity before:', quantity);
         quantity = 0; // Clear cart
-        updateQuantity(0); // Reset displays, qtyDisplay to 1, price to R3,290.00
+        updateQuantity(0); // Reset displays
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
         cartItemPrice.textContent = 'Cart is empty';
         cartSubtotal.textContent = formatPrice(0);
         cartPopup.classList.remove('active');
         backdrop.classList.remove('active'); // Hide backdrop
+        console.log('Cart cleared: Quantity=', quantity, 'CartItemPrice=', cartItemPrice.textContent);
     }
 
     closeBtn.addEventListener('click', clearCart);

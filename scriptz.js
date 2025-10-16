@@ -1,4 +1,4 @@
-// Toggle mobile navigation menu.
+// Hamburger Menu or Toggle mobile navigation menu.
 function toggleMenu() {
     const nav = document.getElementById('navMobile');
     if (nav) nav.classList.toggle('active');
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             qtyDisplay.textContent = quantity;
         }
         decrementBtn.disabled = quantity === 1;
-        incrementBtn.disabled = quantity === maxQty;
+        incrementBtn.disabled = quantity === maxQty; //Yuppie Chef has a maximum QTY of 5
         const priceDisplay = document.querySelector('.qty-selector span:last-child');
         if (priceDisplay) {
             priceDisplay.textContent = `× ${formatPrice(basePrice * quantity)}`;
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000);
 
             cartItemName.textContent = productName;
-            cartItemVariant.textContent = 'With Installation';
+            cartItemVariant.textContent = 'With Installation'; //What did I do here?? //Product options?
             cartItemPrice.textContent = cart.totalQuantity > 0 
                 ? `${cart.totalQuantity} x ${formatPrice(productPrice)}` 
                 : 'Your cart is empty';
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Tabs: Switch panels.
+    // Tabs: Change Tabs.
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabPanels = document.querySelectorAll('.tab-panel');
 
@@ -220,3 +220,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+

@@ -44,13 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
         qtyDisplay.textContent = quantity === 0 ? 1 : quantity; // Display 1 if quantity is 0
         decrementBtn.disabled = quantity === 0;
         incrementBtn.disabled = quantity === maxQty;
-        document.querySelector('.qty-selector span:last-child').textContent = `× ${formatPrice(basePrice * quantity)}`;
+        document.querySelector('.qty-selector span:last-child').textContent = `× ${formatPrice(basePrice * (quantity === 0 ? 1 : quantity))}`; // Show R3,290.00 when quantity is 0
         qtyDisplay.style.transform = 'scale(1.05)';
         setTimeout(() => qtyDisplay.style.transform = 'scale(1)', 150);
     }
 
     // Initialize price display
-    updateQuantity(0); // Set initial price to R0.00, qtyDisplay to 1
+    updateQuantity(0); // Set initial price to R3,290.00, qtyDisplay to 1
 
     // Remove existing listeners to prevent duplicates
     function addToCartHandler() {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     closeBtn.addEventListener('click', function() {
         quantity = 0; // Clear cart
         isFirstAddToCart = true; // Reset first click
-        updateQuantity(0); // Reset displays, qtyDisplay to 1
+        updateQuantity(0); // Reset displays, qtyDisplay to 1, price to R3,290.00
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
         cartItemPrice.textContent = 'Cart is empty';
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     backdrop.addEventListener('click', function() {
         quantity = 0; // Clear cart
         isFirstAddToCart = true; // Reset first click
-        updateQuantity(0); // Reset displays, qtyDisplay to 1
+        updateQuantity(0); // Reset displays, qtyDisplay to 1, price to R3,290.00
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
         cartItemPrice.textContent = 'Cart is empty';

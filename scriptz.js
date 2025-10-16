@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const incrementBtn = document.querySelector('.js-qty-increment');
     const cartItemPrice = document.getElementById('cart-item-price');
     const cartSubtotal = document.getElementById('cart-subtotal');
-    let quantity = 1;
+    let quantity = 0; // Initialize to 0 (cart empty)
+    let isFirstAddToCart = true; // Track first click
     const maxQty = Infinity;
     const basePrice = 3290.00;
 
@@ -39,30 +40,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update quantity and prices
     function updateQuantity(change) {
-        quantity = Math.max(1, Math.min(maxQty, quantity + change));
-        qtyDisplay.textContent = quantity;
-        decrementBtn.disabled = quantity === 1;
+        quantity = Math.max(0, Math.min(maxQty, quantity + change)); // Allow 0
+        qtyDisplay.textContent = quantity === 0 ? 1 : quantity; // Display 1 if quantity is 0
+        decrementBtn.disabled = quantity === 0;
         incrementBtn.disabled = quantity === maxQty;
         document.querySelector('.qty-selector span:last-child').textContent = `× ${formatPrice(basePrice * quantity)}`;
         qtyDisplay.style.transform = 'scale(1.05)';
         setTimeout(() => qtyDisplay.style.transform = 'scale(1)', 150);
     }
 
-    decrementBtn.addEventListener('click', () => updateQuantity(-1));
-    incrementBtn.addEventListener('click', () => updateQuantity(1));
+    // Initialize price display
+    updateQuantity(0); // Set initial price to R0.00, qtyDisplay to 1
 
-    // Cart popup and backdrop
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const cartPopup = document.querySelector('.cart-popup');
-    const backdrop = document.querySelector('.backdrop');
-    const closeBtn = document.querySelector('.close-btn');
-    const cartItemName = document.getElementById('cart-item-name');
-    const cartItemVariant = document.getElementById('cart-item-variant');
-
-    addToCartBtn.addEventListener('click', function() {
+    // Remove existing listeners to prevent duplicates
+    function addToCartHandler() {
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         this.disabled = true;
-        updateQuantity(1); // Increment quantity on Add to Cart
+        if (isFirstAddToCart) {
+            quantity = 1; // Set to 1 on first click
+            isFirstAddToCart = false;
+        } else {
+            quantity += 1; // Increment on subsequent clicks
+        }
+        updateQuantity(0); // Update displays without changing quantity
         const productName = document.querySelector('.product-page-title').textContent;
         const productPrice = document.querySelector('.product-page-price')
             ? parseFloat(document.querySelector('.product-page-price').textContent.replace('R', '').replace(',', ''))
@@ -79,21 +79,54 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update popup content
             cartItemName.textContent = productName;
             cartItemVariant.textContent = 'With Installation';
-            cartItemPrice.textContent = `${quantity} x ${formatPrice(productPrice)}`;
-            cartSubtotal.textContent = formatPrice(total);
+            cartItemPrice.textContent = quantity > 0 
+                ? `${quantity} x ${formatPrice(productPrice)}` 
+                : 'Cart is empty';
+            cartSubtotal.textContent = quantity > 0 
+                ? formatPrice(total) 
+                : formatPrice(0);
 
             cartPopup.classList.add('active');
             backdrop.classList.add('active'); // Show grey backdrop
             cartPopup.focus(); // Accessibility
         }, 1000);
-    });
+    }
+
+    // Cart popup and backdrop
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const cartPopup = document.querySelector('.cart-popup');
+    const backdrop = document.querySelector('.backdrop');
+    const closeBtn = document.querySelector('.close-btn');
+    const cartItemName = document.getElementById('cart-item-name');
+    const cartItemVariant = document.getElementById('cart-item-variant');
+
+    // Prevent duplicate listeners
+    addToCartBtn.removeEventListener('click', addToCartHandler);
+    addToCartBtn.addEventListener('click', addToCartHandler);
+
+    decrementBtn.addEventListener('click', () => updateQuantity(-1));
+    incrementBtn.addEventListener('click', () => updateQuantity(1));
 
     closeBtn.addEventListener('click', function() {
+        quantity = 0; // Clear cart
+        isFirstAddToCart = true; // Reset first click
+        updateQuantity(0); // Reset displays, qtyDisplay to 1
+        cartItemName.textContent = '';
+        cartItemVariant.textContent = '';
+        cartItemPrice.textContent = 'Cart is empty';
+        cartSubtotal.textContent = formatPrice(0);
         cartPopup.classList.remove('active');
         backdrop.classList.remove('active'); // Hide backdrop
     });
 
     backdrop.addEventListener('click', function() {
+        quantity = 0; // Clear cart
+        isFirstAddToCart = true; // Reset first click
+        updateQuantity(0); // Reset displays, qtyDisplay to 1
+        cartItemName.textContent = '';
+        cartItemVariant.textContent = '';
+        cartItemPrice.textContent = 'Cart is empty';
+        cartSubtotal.textContent = formatPrice(0);
         cartPopup.classList.remove('active');
         backdrop.classList.remove('active'); // Hide backdrop
     });

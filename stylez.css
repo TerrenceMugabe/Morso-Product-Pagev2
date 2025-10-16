@@ -1026,6 +1026,16 @@
                 font-size: 0.875rem;
             }
         }
+
+.cart-popup .item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.remove-btn {
+    cursor: pointer;
+    color: red; /* Adjust as needed */
         
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -1034,6 +1044,7 @@
 
 
         }
+
 
 
 

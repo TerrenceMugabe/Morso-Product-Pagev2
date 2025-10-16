@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateQuantity(change) {
         console.log('updateQuantity:', change, 'Quantity:', quantity);
         quantity = Math.max(1, Math.min(maxQty, quantity + change)); // Keep between 1 and maxQty.
-        // Update display based on element type (span or input).
         if (qtyDisplay.tagName.toLowerCase() === 'input') {
             qtyDisplay.value = quantity;
         } else {
@@ -78,15 +77,15 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Updated: Quantity=', quantity, 'Display=', qtyDisplay.tagName.toLowerCase() === 'input' ? qtyDisplay.value : qtyDisplay.textContent);
     }
 
-    // Initialize quantity and price explicitly.
+    // Initialize quantity and price.
     function initializeQuantity() {
-        quantity = 1; // Force quantity to 1.
+        quantity = 1;
         if (qtyDisplay.tagName.toLowerCase() === 'input') {
-            qtyDisplay.value = quantity; // Set input value.
+            qtyDisplay.value = quantity;
         } else {
-            qtyDisplay.textContent = quantity; // Set span text.
+            qtyDisplay.textContent = quantity;
         }
-        decrementBtn.disabled = true; // Disable decrement at start.
+        decrementBtn.disabled = true;
         incrementBtn.disabled = quantity === maxQty;
         const priceDisplay = document.querySelector('.qty-selector span:last-child');
         if (priceDisplay) {
@@ -104,12 +103,10 @@ document.addEventListener('DOMContentLoaded', function() {
         addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         addToCartBtn.disabled = true;
 
-        // Get product details.
         const productName = document.querySelector('.product-page-title')?.textContent || 'Product';
         const productPriceText = document.querySelector('.product-page-price')?.textContent || 'R3,290';
         const productPrice = parseFloat(productPriceText.replace('R', '').replace(',', '')) || 3290.00;
 
-        // Add quantity to cart.
         const existingItem = cart.items.find(item => item.name === productName);
         if (existingItem) {
             existingItem.quantity += quantity;
@@ -123,11 +120,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Update cart totals.
         cart.totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
         cart.totalPrice = cart.items.reduce((sum, item) => sum + item.totalPrice, 0);
 
-        // Update popup.
         setTimeout(() => {
             addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
             setTimeout(() => {
@@ -165,19 +160,18 @@ document.addEventListener('DOMContentLoaded', function() {
         updateQuantity(1);
     });
 
-    // Clear cart.
+    // Close cart popup without clearing cart, update page quantity.
     function clearCart() {
-        console.log('Clearing cart, Total Quantity:', cart.totalQuantity);
-        cart = { items: [], totalQuantity: 0, totalPrice: 0 };
-        quantity = 1;
-        initializeQuantity();
+        console.log('Closing cart, Total Quantity:', cart.totalQuantity);
+        quantity = cart.totalQuantity > 0 ? cart.totalQuantity : 1; // Set to cart quantity or 1 if empty.
+        updateQuantity(0); // Update display to match cart quantity.
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
         cartItemPrice.textContent = 'Your cart is empty';
         cartSubtotal.textContent = formatPrice(0);
         cartPopup.classList.remove('active');
         backdrop.classList.remove('active');
-        console.log('Cart cleared: Total Quantity=', cart.totalQuantity);
+        console.log('Cart closed: Quantity=', quantity, 'Cart Total Quantity=', cart.totalQuantity);
     }
 
     // Attach clearCart.

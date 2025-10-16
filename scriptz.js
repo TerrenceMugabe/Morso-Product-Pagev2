@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartSubtotal = document.getElementById('cart-subtotal');
     let quantity = 1;
     const maxQty = Infinity;
-    const basePrice = 3290.00; // Correct base price
+    const basePrice = 3290.00;
 
     // Format price for South African Rand
     const formatPrice = (price) => {
@@ -62,8 +62,11 @@ document.addEventListener('DOMContentLoaded', function() {
     addToCartBtn.addEventListener('click', function() {
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         this.disabled = true;
+        updateQuantity(1); // Increment quantity on Add to Cart
         const productName = document.querySelector('.product-page-title').textContent;
-        const productPrice = parseFloat(document.querySelector('.product-page-price').textContent.replace('R', '').replace(',', '')); // "R3,290" → 3290.00
+        const productPrice = document.querySelector('.product-page-price')
+            ? parseFloat(document.querySelector('.product-page-price').textContent.replace('R', '').replace(',', ''))
+            : 3290.00; // Fallback price
         const total = productPrice * quantity;
 
         setTimeout(() => {
@@ -90,10 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
         backdrop.classList.remove('active'); // Hide backdrop
     });
 
-    // Hide popup and backdrop when backdrop is clicked
     backdrop.addEventListener('click', function() {
         cartPopup.classList.remove('active');
-        backdrop.classList.remove('active');
+        backdrop.classList.remove('active'); // Hide backdrop
     });
 
     // Image modal

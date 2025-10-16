@@ -1,12 +1,12 @@
-// Toggles mobile navigation menu.
+// Toggle mobile navigation menu.
 function toggleMenu() {
     const nav = document.getElementById('navMobile');
     if (nav) nav.classList.toggle('active');
 }
 
-// Runs on page load to set up event listeners and initial states.
+// Runs on page load.
 document.addEventListener('DOMContentLoaded', function() {
-    // Check for required DOM elements.
+    // Check DOM elements.
     const qtyDisplay = document.getElementById('qty');
     const decrementBtn = document.querySelector('.js-qty-decrement');
     const incrementBtn = document.querySelector('.js-qty-increment');
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.querySelector('.close-btn');
     const removeBtn = document.querySelector('.remove-btn');
 
-    // Log missing elements for debugging.
+    // Log missing elements.
     if (!qtyDisplay || !decrementBtn || !incrementBtn || !addToCartBtn || !cartPopup || !closeBtn || !removeBtn) {
         console.error('Missing DOM elements:', {
             qtyDisplay, decrementBtn, incrementBtn, addToCartBtn, cartPopup, closeBtn, removeBtn
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Gallery thumbnails: Update main image on click.
+    // Gallery thumbnails: Update main image.
     const thumbnails = document.querySelectorAll('.gallerythumb');
     const mainImage = document.querySelector('.mainpic');
     
@@ -47,12 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Quantity and cart setup.
-    let quantity = 1; // Current quantity in #qty input.
-    let cart = { items: [], totalQuantity: 0, totalPrice: 0 }; // Persistent cart state.
+    let quantity = 1; // Initial quantity.
+    let cart = { items: [], totalQuantity: 0, totalPrice: 0 }; // Persistent cart.
     const maxQty = Infinity;
     const basePrice = 3290.00; // Price per item in ZAR.
 
-    // Format price in South African Rand (e.g., R3,290.00).
+    // Format price in ZAR.
     const formatPrice = (price) => {
         return `R${price.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
@@ -61,7 +61,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateQuantity(change) {
         console.log('updateQuantity:', change, 'Quantity:', quantity);
         quantity = Math.max(1, Math.min(maxQty, quantity + change)); // Keep between 1 and maxQty.
-        qtyDisplay.textContent = quantity;
+        // Update display based on element type (span or input).
+        if (qtyDisplay.tagName.toLowerCase() === 'input') {
+            qtyDisplay.value = quantity;
+        } else {
+            qtyDisplay.textContent = quantity;
+        }
         decrementBtn.disabled = quantity === 1;
         incrementBtn.disabled = quantity === maxQty;
         const priceDisplay = document.querySelector('.qty-selector span:last-child');
@@ -70,11 +75,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         qtyDisplay.style.transform = 'scale(1.05)';
         setTimeout(() => qtyDisplay.style.transform = 'scale(1)', 150);
-        console.log('Updated: Quantity=', quantity, 'Price=', priceDisplay.textContent);
+        console.log('Updated: Quantity=', quantity, 'Display=', qtyDisplay.tagName.toLowerCase() === 'input' ? qtyDisplay.value : qtyDisplay.textContent);
     }
 
-    // Initialize quantity and price.
-    updateQuantity(1); // Set #qty to 1, price to R3,290.00.
+    // Initialize quantity and price explicitly.
+    function initializeQuantity() {
+        quantity = 1; // Force quantity to 1.
+        if (qtyDisplay.tagName.toLowerCase() === 'input') {
+            qtyDisplay.value = quantity; // Set input value.
+        } else {
+            qtyDisplay.textContent = quantity; // Set span text.
+        }
+        decrementBtn.disabled = true; // Disable decrement at start.
+        incrementBtn.disabled = quantity === maxQty;
+        const priceDisplay = document.querySelector('.qty-selector span:last-child');
+        if (priceDisplay) {
+            priceDisplay.textContent = `× ${formatPrice(basePrice * quantity)}`;
+        }
+        console.log('Initialized: Quantity=', quantity, 'Display=', qtyDisplay.tagName.toLowerCase() === 'input' ? qtyDisplay.value : qtyDisplay.textContent);
+    }
+
+    // Call initialization.
+    initializeQuantity();
 
     // Handle Add to Cart.
     function addToCartHandler() {
@@ -87,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const productPriceText = document.querySelector('.product-page-price')?.textContent || 'R3,290';
         const productPrice = parseFloat(productPriceText.replace('R', '').replace(',', '')) || 3290.00;
 
-        // Add selected quantity to cart.
+        // Add quantity to cart.
         const existingItem = cart.items.find(item => item.name === productName);
         if (existingItem) {
             existingItem.quantity += quantity;
@@ -105,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cart.totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
         cart.totalPrice = cart.items.reduce((sum, item) => sum + item.totalPrice, 0);
 
-        // Update popup after delay.
+        // Update popup.
         setTimeout(() => {
             addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
             setTimeout(() => {
@@ -113,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 addToCartBtn.disabled = false;
             }, 2000);
 
-            // Update popup content.
             cartItemName.textContent = productName;
             cartItemVariant.textContent = 'With Installation';
             cartItemPrice.textContent = cart.totalQuantity > 0 
@@ -144,12 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateQuantity(1);
     });
 
-    // Clear cart and reset.
+    // Clear cart.
     function clearCart() {
         console.log('Clearing cart, Total Quantity:', cart.totalQuantity);
         cart = { items: [], totalQuantity: 0, totalPrice: 0 };
         quantity = 1;
-        updateQuantity(0);
+        initializeQuantity();
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
         cartItemPrice.textContent = 'Your cart is empty';
@@ -159,12 +180,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Cart cleared: Total Quantity=', cart.totalQuantity);
     }
 
-    // Attach clearCart to buttons.
+    // Attach clearCart.
     closeBtn.addEventListener('click', clearCart);
     backdrop.addEventListener('click', clearCart);
     removeBtn.addEventListener('click', clearCart);
 
-    // Image modal: Show enlarged image on click (desktop only).
+    // Image modal: Enlarge image (desktop).
     mainImage.addEventListener('click', function() {
         if (window.innerWidth < 768) return;
         const modal = document.createElement('div');
@@ -175,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(() => modal.style.opacity = '1');
     });
 
-    // Reviews link: Smooth scroll to reviews.
+    // Reviews link: Smooth scroll.
     const reviewsLink = document.querySelector('.reviews-link');
     if (reviewsLink) {
         reviewsLink.addEventListener('click', e => {
@@ -186,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Tabs: Switch between tab panels.
+    // Tabs: Switch panels.
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabPanels = document.querySelectorAll('.tab-panel');
 
@@ -204,4 +225,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-

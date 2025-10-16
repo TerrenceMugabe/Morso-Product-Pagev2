@@ -608,6 +608,7 @@
         /* Tabs */
         .tabs-container {
             margin: 3rem 0;
+            font-family: 'Rubik', sans-serif;
         }
         
         .tab-nav {
@@ -617,6 +618,7 @@
             margin-bottom: 0;
             list-style: none;
             margin-left: 0;
+            font-family: 'Rubik', sans-serif;
         }
         
         .tab-btn {
@@ -1044,6 +1046,7 @@
 
 
         }
+
 
 
 

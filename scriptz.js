@@ -4,6 +4,7 @@ function toggleMenu() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Gallery thumbnails
     const thumbnails = document.querySelectorAll('.gallerythumb');
     const mainImage = document.querySelector('.mainpic');
     
@@ -21,19 +22,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Quantity selector
     const qtyDisplay = document.getElementById('qty');
     const decrementBtn = document.querySelector('.js-qty-decrement');
     const incrementBtn = document.querySelector('.js-qty-increment');
+    const cartItemPrice = document.getElementById('cart-item-price');
+    const cartSubtotal = document.getElementById('cart-subtotal');
     let quantity = 1;
     const maxQty = Infinity;
-    const basePrice = 3290;
+    const basePrice = 3290.00;
 
+    // Format price for South African Rand
+    const formatPrice = (price) => {
+        return `R${price.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    };
+
+    // Update quantity and prices
     function updateQuantity(change) {
         quantity = Math.max(1, Math.min(maxQty, quantity + change));
         qtyDisplay.textContent = quantity;
         decrementBtn.disabled = quantity === 1;
         incrementBtn.disabled = quantity === maxQty;
-        document.querySelector('.qty-selector span:last-child').textContent = `× R${(basePrice * quantity).toLocaleString()}.00`;
+        document.querySelector('.qty-selector span:last-child').textContent = `× ${formatPrice(basePrice * quantity)}`;
         qtyDisplay.style.transform = 'scale(1.05)';
         setTimeout(() => qtyDisplay.style.transform = 'scale(1)', 150);
     }
@@ -41,20 +51,23 @@ document.addEventListener('DOMContentLoaded', function() {
     decrementBtn.addEventListener('click', () => updateQuantity(-1));
     incrementBtn.addEventListener('click', () => updateQuantity(1));
 
+    // Cart popup and backdrop
     const addToCartBtn = document.getElementById('addToCartBtn');
     const cartPopup = document.querySelector('.cart-popup');
+    const backdrop = document.querySelector('.backdrop');
     const closeBtn = document.querySelector('.close-btn');
     const cartItemName = document.getElementById('cart-item-name');
     const cartItemVariant = document.getElementById('cart-item-variant');
-    const cartItemPrice = document.getElementById('cart-item-price');
-    const cartSubtotal = document.getElementById('cart-subtotal');
 
     addToCartBtn.addEventListener('click', function() {
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
         this.disabled = true;
+        updateQuantity(1); // Increment quantity on Add to Cart
         const productName = document.querySelector('.product-page-title').textContent;
-        const productPrice = document.querySelector('.product-page-price').textContent.replace('R', '').trim();
-        const totalPrice = `R${(parseFloat(productPrice) * quantity).toLocaleString()}.00`;
+        const productPrice = document.querySelector('.product-page-price')
+            ? parseFloat(document.querySelector('.product-page-price').textContent.replace('R', '').replace(',', ''))
+            : 3290.00; // Fallback price
+        const total = productPrice * quantity;
 
         setTimeout(() => {
             this.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
@@ -66,27 +79,37 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update popup content
             cartItemName.textContent = productName;
             cartItemVariant.textContent = 'With Installation';
-            cartItemPrice.textContent = `${quantity} x ${totalPrice}`;
-            cartSubtotal.textContent = totalPrice;
+            cartItemPrice.textContent = `${quantity} x ${formatPrice(productPrice)}`;
+            cartSubtotal.textContent = formatPrice(total);
 
-            cartPopup.classList.add('active'); // Show the popup
+            cartPopup.classList.add('active');
+            backdrop.classList.add('active'); // Show grey backdrop
+            cartPopup.focus(); // Accessibility
         }, 1000);
     });
 
     closeBtn.addEventListener('click', function() {
-        cartPopup.classList.remove('active'); // Hide the popup
+        cartPopup.classList.remove('active');
+        backdrop.classList.remove('active'); // Hide backdrop
     });
 
+    backdrop.addEventListener('click', function() {
+        cartPopup.classList.remove('active');
+        backdrop.classList.remove('active'); // Hide backdrop
+    });
+
+    // Image modal
     mainImage.addEventListener('click', function() {
         if (window.innerWidth < 768) return;
         const modal = document.createElement('div');
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:1000;cursor:zoom-out;opacity:0;transition:opacity 0.3s;';
-        modal.innerHTML = `<img src="${this.src}" style="max-width:90%;max-height:90%;box-shadow:0 0 40px rgba(0,0,0,0.5);" alt="${this.alt}"><button style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:white;font-size:2rem;cursor:pointer;" onclick="this.parentElement.style.opacity=\'0\';setTimeout(()=>document.body.removeChild(this.parentElement),300);">&times;</button>`;
+        modal.innerHTML = `<img src="${this.src}" style="max-width:90%;max-height:90%;box-shadow:0 0 40px rgba(0,0,0,0.5);" alt="${this.alt}"><button style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:white;font-size:2rem;cursor:pointer;" onclick="this.parentElement.style.opacity='0';setTimeout(()=>document.body.removeChild(this.parentElement),300);">&times;</button>`;
         modal.onclick = e => e.target === modal && (modal.style.opacity = '0', setTimeout(() => document.body.removeChild(modal), 300));
         document.body.appendChild(modal);
         requestAnimationFrame(() => modal.style.opacity = '1');
     });
 
+    // Reviews link scroll
     const reviewsLink = document.querySelector('.reviews-link');
     if (reviewsLink) {
         reviewsLink.addEventListener('click', e => {
@@ -104,10 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
     tabBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const targetTab = btn.dataset.tab;
-
             tabBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             tabPanels.forEach(panel => {
                 panel.classList.remove('active');
                 if (panel.id === targetTab) {
@@ -117,30 +138,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-const qtyDisplay = document.querySelector('.qty-display');
-const qtyIncrement = document.querySelector('.js-qty-increment');
-const qtyDecrement = document.querySelector('.js-qty-decrement');
-const cartItemPrice = document.querySelector('#cart-item-price');
-const cartSubtotal = document.querySelector('#cart-subtotal');
-const basePrice = 3290.00; // Base price in Rands
-
-qtyIncrement.addEventListener('click', () => {
-  let qty = parseInt(qtyDisplay.textContent);
-  qty++;
-  qtyDisplay.textContent = qty;
-  cartItemPrice.textContent = `${qty} x R${(basePrice * qty).toFixed(2)}`;
-  cartSubtotal.textContent = `R${(basePrice * qty).toFixed(2)}`;
-});
-
-qtyDecrement.addEventListener('click', () => {
-  let qty = parseInt(qtyDisplay.textContent);
-  if (qty > 1) {
-    qty--;
-    qtyDisplay.textContent = qty;
-    cartItemPrice.textContent = `${qty} x R${(basePrice * qty).toFixed(2)}`;
-    cartSubtotal.textContent = `R${(basePrice * qty).toFixed(2)}`;
-  }
-});
-
 

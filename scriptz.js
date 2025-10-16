@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const incrementBtn = document.querySelector('.js-qty-increment');
     const cartItemPrice = document.getElementById('cart-item-price');
     const cartSubtotal = document.getElementById('cart-subtotal');
+    const cartItemName = document.getElementById('cart-item-name');
+    const cartItemVariant = document.getElementById('cart-item-variant');
     let quantity = 0; // Initialize to 0 (cart empty)
     const maxQty = Infinity;
     const basePrice = 3290.00;
@@ -51,12 +53,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize price display
     updateQuantity(0); // Set initial price to R3,290.00, qtyDisplay to 1
 
+    // Cart popup and backdrop
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const cartPopup = document.querySelector('.cart-popup');
+    const backdrop = document.querySelector('.backdrop');
+    const closeBtn = document.querySelector('.close-btn');
+
     // Remove existing listeners to prevent duplicates
     function addToCartHandler() {
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-        this.disabled = true;
-        quantity += 1; // Increment quantity per click
-        updateQuantity(0); // Update displays without changing quantity
+        addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        addToCartBtn.disabled = true;
+        updateQuantity(1); // Increment quantity
         const productName = document.querySelector('.product-page-title').textContent;
         const productPrice = document.querySelector('.product-page-price')
             ? parseFloat(document.querySelector('.product-page-price').textContent.replace('R', '').replace(',', ''))
@@ -64,10 +71,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const total = productPrice * quantity;
 
         setTimeout(() => {
-            this.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
+            addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Added to Cart!';
             setTimeout(() => {
-                this.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
-                this.disabled = false;
+                addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+                addToCartBtn.disabled = false;
             }, 2000);
 
             // Update popup content
@@ -86,14 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
 
-    // Cart popup and backdrop
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const cartPopup = document.querySelector('.cart-popup');
-    const backdrop = document.querySelector('.backdrop');
-    const closeBtn = document.querySelector('.close-btn');
-    const cartItemName = document.getElementById('cart-item-name');
-    const cartItemVariant = document.getElementById('cart-item-variant');
-
     // Prevent duplicate listeners
     addToCartBtn.removeEventListener('click', addToCartHandler);
     addToCartBtn.addEventListener('click', addToCartHandler);
@@ -101,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
     decrementBtn.addEventListener('click', () => updateQuantity(-1));
     incrementBtn.addEventListener('click', () => updateQuantity(1));
 
-    closeBtn.addEventListener('click', function() {
+    function clearCart() {
         quantity = 0; // Clear cart
         updateQuantity(0); // Reset displays, qtyDisplay to 1, price to R3,290.00
         cartItemName.textContent = '';
@@ -110,18 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
         cartSubtotal.textContent = formatPrice(0);
         cartPopup.classList.remove('active');
         backdrop.classList.remove('active'); // Hide backdrop
-    });
+    }
 
-    backdrop.addEventListener('click', function() {
-        quantity = 0; // Clear cart
-        updateQuantity(0); // Reset displays, qtyDisplay to 1, price to R3,290.00
-        cartItemName.textContent = '';
-        cartItemVariant.textContent = '';
-        cartItemPrice.textContent = 'Cart is empty';
-        cartSubtotal.textContent = formatPrice(0);
-        cartPopup.classList.remove('active');
-        backdrop.classList.remove('active'); // Hide backdrop
-    });
+    closeBtn.addEventListener('click', clearCart);
+    backdrop.addEventListener('click', clearCart);
 
     // Image modal
     mainImage.addEventListener('click', function() {

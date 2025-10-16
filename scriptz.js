@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxQty = Infinity;
     const basePrice = 3290.00; // Price per item in ZAR.
 
-    // Format price in ZAR.
+    // Format price in Rand / ZAR.
     const formatPrice = (price) => {
         return `R${price.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000);
 
             cartItemName.textContent = productName;
-            cartItemVariant.textContent = 'With Installation'; //What did I do here?? //Product options?
+            cartItemVariant.textContent = 'With Installation'; //Remember to try and confirm the way product option or Variants show
             cartItemPrice.textContent = cart.totalQuantity > 0 
                 ? `${cart.totalQuantity} x ${formatPrice(productPrice)}` 
                 : 'Your cart is empty';
@@ -220,4 +220,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
 

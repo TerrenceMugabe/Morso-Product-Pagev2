@@ -160,18 +160,19 @@ document.addEventListener('DOMContentLoaded', function() {
         updateQuantity(1);
     });
 
-    // Close cart popup without clearing cart, update page quantity.
+    // Clear cart and reset page quantity.
     function clearCart() {
-        console.log('Closing cart, Total Quantity:', cart.totalQuantity);
-        quantity = cart.totalQuantity > 0 ? cart.totalQuantity : 1; // Set to cart quantity or 1 if empty.
-        updateQuantity(0); // Update display to match cart quantity.
+        console.log('Clearing cart, Total Quantity:', cart.totalQuantity);
+        cart = { items: [], totalQuantity: 0, totalPrice: 0 }; // Reset cart.
+        quantity = 1; // Reset page quantity.
+        initializeQuantity(); // Set #qty to 1 and update price.
         cartItemName.textContent = '';
         cartItemVariant.textContent = '';
         cartItemPrice.textContent = 'Your cart is empty';
         cartSubtotal.textContent = formatPrice(0);
         cartPopup.classList.remove('active');
         backdrop.classList.remove('active');
-        console.log('Cart closed: Quantity=', quantity, 'Cart Total Quantity=', cart.totalQuantity);
+        console.log('Cart cleared: Quantity=', quantity, 'Cart Total Quantity=', cart.totalQuantity);
     }
 
     // Attach clearCart.

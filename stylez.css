@@ -896,9 +896,8 @@
 }
 
 .cart-item-image {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
+    width: 80px;
+    height: 80px;
     border: 1px solid var(--border-color);
 }
 
@@ -1049,6 +1048,7 @@
 
 
         }
+
 
 
 

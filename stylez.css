@@ -613,7 +613,7 @@
         
         .tab-nav {
             display: flex;
-            background: #b2945b;
+            background: #b2945b52;
             overflow: hidden;
             margin-bottom: 0;
             list-style: none;
@@ -1049,6 +1049,7 @@
 
 
         }
+
 
 
 

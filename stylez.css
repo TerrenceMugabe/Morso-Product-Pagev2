@@ -948,7 +948,7 @@
 .cart-actions button {
     padding: 10px 40px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     font-family: 'Rubik', sans-serif;
     transition: all 0.3s ease;
@@ -1048,6 +1048,7 @@
 
 
         }
+
 
 
 

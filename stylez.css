@@ -946,7 +946,7 @@
 }
 
 .cart-actions button {
-    padding: 10px 20px;
+    padding: 10px 40px;
     border: 1px solid var(--border-color);
     background-color: #000;
     cursor: pointer;
@@ -962,8 +962,7 @@
 
 .view-cart-btn {
     color: #fff;
-            padding-left: 10px;
-            padding-right: 10px;
+            
 }
 
 .view-cart-btn:hover {
@@ -1049,6 +1048,7 @@
 
 
         }
+
 
 
 

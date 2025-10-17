@@ -962,6 +962,8 @@
 
 .view-cart-btn {
     color: #fff;
+            padding-left: 10px;
+            padding-right: 10px;
 }
 
 .view-cart-btn:hover {
@@ -1047,6 +1049,7 @@
 
 
         }
+
 
 
 

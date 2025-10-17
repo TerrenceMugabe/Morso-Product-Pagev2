@@ -948,7 +948,6 @@
 
 .cart-actions button {
     padding: 10px 40px;
-    border: 1px solid var(--border-color);
     cursor: pointer;
     font-size: 16px;
     font-weight: 500;
@@ -961,8 +960,8 @@
 }
 
 .view-cart-btn {
-    color: black;
-    border: 1px solid black;
+    color: #000;
+    border: 1px solid #000;
             
 }
 
@@ -1049,6 +1048,7 @@
 
 
         }
+
 
 
 

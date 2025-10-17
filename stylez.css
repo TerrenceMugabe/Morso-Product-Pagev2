@@ -628,7 +628,7 @@
             border: none;
             font-size: 1rem;
             font-weight: bold;
-            color: #2f1f19;
+            color: #fff;
             cursor: pointer;
             transition: all 0.3s ease;
             border-right: 1px solid #b2945b;
@@ -1049,6 +1049,7 @@
 
 
         }
+
 
 
 

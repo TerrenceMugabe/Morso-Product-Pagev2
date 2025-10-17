@@ -934,7 +934,7 @@
     padding-top: 10px;
     font-weight: 700;
     margin-top: 350px; /* Pushes subtotal to the bottom */
-    margin-left: 5px;
+    margin-left: 8px;
 }
 
 .cart-actions {
@@ -1049,6 +1049,7 @@
 
 
         }
+
 
 
 
